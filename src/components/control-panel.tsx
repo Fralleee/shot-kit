@@ -4,13 +4,21 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import type { BackgroundType, BrowserFrameStyle } from "@/store/editor-store";
-import { useEditorStore } from "@/store/editor-store";
+import type { BackgroundType, BrowserFrameStyle, EditorSettings } from "@/store/editor-store";
+import { defaultSettings, useEditorStore } from "@/store/editor-store";
 import { presets } from "@/store/presets";
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function hasChanges(store: EditorSettings, keys: (keyof EditorSettings)[]) {
+    return keys.some((k) => store[k] !== defaultSettings[k]);
+}
+
+function Section({
+    title,
+    defaultOpen = false,
+    children,
+}: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
     return (
-        <Collapsible defaultOpen className="border-b border-border last:border-b-0">
+        <Collapsible defaultOpen={defaultOpen} className="border-b border-border last:border-b-0">
             <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight hover:text-foreground/80 transition-colors [&[data-state=open]>svg]:rotate-180">
                 {title}
                 <ChevronDownIcon className="size-4 text-muted-foreground transition-transform duration-200" />
@@ -28,6 +36,7 @@ function SliderControl({
     max,
     step = 1,
     suffix = "",
+    defaultValue,
 }: {
     label: string;
     value: number;
@@ -36,26 +45,65 @@ function SliderControl({
     max: number;
     step?: number;
     suffix?: string;
+    defaultValue: number;
 }) {
+    const changed = value !== defaultValue;
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between">
                 <Label className="text-xs text-muted-foreground">{label}</Label>
-                <span className="text-xs text-muted-foreground font-mono tabular-nums">
-                    {value}
-                    {suffix}
-                </span>
+                <div className="flex items-center gap-1">
+                    {changed && (
+                        <button
+                            type="button"
+                            onClick={() => onChange(defaultValue)}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            title="Reset to default"
+                        >
+                            <RotateCcwIcon className="size-3" />
+                        </button>
+                    )}
+                    <input
+                        type="number"
+                        value={value}
+                        onChange={(e) => {
+                            const v = Number.parseFloat(e.target.value);
+                            if (!Number.isNaN(v)) onChange(v);
+                        }}
+                        min={min}
+                        max={max}
+                        step={step}
+                        className="w-16 text-xs text-muted-foreground font-mono tabular-nums text-right bg-transparent border border-border rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    {suffix && <span className="text-xs text-muted-foreground font-mono">{suffix}</span>}
+                </div>
             </div>
             <Slider value={[value]} onValueChange={([v]) => onChange(v)} min={min} max={max} step={step} />
         </div>
     );
 }
 
-function ColorInput({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function ColorInput({
+    label,
+    value,
+    onChange,
+    defaultValue,
+}: { label: string; value: string; onChange: (v: string) => void; defaultValue: string }) {
+    const changed = value !== defaultValue;
     return (
         <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">{label}</Label>
             <div className="flex items-center gap-2">
+                {changed && (
+                    <button
+                        type="button"
+                        onClick={() => onChange(defaultValue)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        title="Reset to default"
+                    >
+                        <RotateCcwIcon className="size-3" />
+                    </button>
+                )}
                 <input
                     type="color"
                     value={value}
@@ -87,7 +135,7 @@ export function ControlPanel() {
                     </button>
                 </div>
 
-                <Section title="Presets">
+                <Section title="Presets" defaultOpen>
                     <div className="grid grid-cols-2 gap-2">
                         {presets.map((preset) => (
                             <button
@@ -102,7 +150,7 @@ export function ControlPanel() {
                     </div>
                 </Section>
 
-                <Section title="Corners">
+                <Section title="Corners" defaultOpen={hasChanges(store, ["borderRadius"])}>
                     <SliderControl
                         label="Border Radius"
                         value={store.borderRadius}
@@ -110,13 +158,37 @@ export function ControlPanel() {
                         min={0}
                         max={48}
                         suffix="px"
+                        defaultValue={defaultSettings.borderRadius}
                     />
                 </Section>
 
-                <Section title="Shadow">
+                <Section
+                    title="Shadow"
+                    defaultOpen={hasChanges(store, [
+                        "shadowEnabled",
+                        "shadowBlur",
+                        "shadowSpread",
+                        "shadowOffsetX",
+                        "shadowOffsetY",
+                        "shadowColor",
+                        "shadowOpacity",
+                    ])}
+                >
                     <div className="flex items-center justify-between">
                         <Label className="text-xs text-muted-foreground">Enabled</Label>
-                        <Switch checked={store.shadowEnabled} onCheckedChange={store.setShadowEnabled} />
+                        <div className="flex items-center gap-2">
+                            {store.shadowEnabled !== defaultSettings.shadowEnabled && (
+                                <button
+                                    type="button"
+                                    onClick={() => store.setShadowEnabled(defaultSettings.shadowEnabled)}
+                                    className="text-muted-foreground hover:text-foreground transition-colors"
+                                    title="Reset to default"
+                                >
+                                    <RotateCcwIcon className="size-3" />
+                                </button>
+                            )}
+                            <Switch checked={store.shadowEnabled} onCheckedChange={store.setShadowEnabled} />
+                        </div>
                     </div>
                     {store.shadowEnabled && (
                         <div className="space-y-3">
@@ -127,6 +199,7 @@ export function ControlPanel() {
                                 min={0}
                                 max={100}
                                 suffix="px"
+                                defaultValue={defaultSettings.shadowBlur}
                             />
                             <SliderControl
                                 label="Spread"
@@ -135,6 +208,7 @@ export function ControlPanel() {
                                 min={-20}
                                 max={40}
                                 suffix="px"
+                                defaultValue={defaultSettings.shadowSpread}
                             />
                             <SliderControl
                                 label="Offset X"
@@ -143,6 +217,7 @@ export function ControlPanel() {
                                 min={-50}
                                 max={50}
                                 suffix="px"
+                                defaultValue={defaultSettings.shadowOffsetX}
                             />
                             <SliderControl
                                 label="Offset Y"
@@ -151,6 +226,7 @@ export function ControlPanel() {
                                 min={-50}
                                 max={50}
                                 suffix="px"
+                                defaultValue={defaultSettings.shadowOffsetY}
                             />
                             <SliderControl
                                 label="Opacity"
@@ -159,13 +235,17 @@ export function ControlPanel() {
                                 min={0}
                                 max={1}
                                 step={0.05}
+                                defaultValue={defaultSettings.shadowOpacity}
                             />
-                            <ColorInput label="Color" value={store.shadowColor} onChange={store.setShadowColor} />
+                            <ColorInput label="Color" value={store.shadowColor} onChange={store.setShadowColor} defaultValue={defaultSettings.shadowColor} />
                         </div>
                     )}
                 </Section>
 
-                <Section title="Rotate & Tilt">
+                <Section
+                    title="Rotate & Tilt"
+                    defaultOpen={hasChanges(store, ["rotateX", "rotateY", "rotateZ", "perspective"])}
+                >
                     <SliderControl
                         label="Tilt X"
                         value={store.rotateX}
@@ -173,6 +253,7 @@ export function ControlPanel() {
                         min={-45}
                         max={45}
                         suffix="°"
+                        defaultValue={defaultSettings.rotateX}
                     />
                     <SliderControl
                         label="Tilt Y"
@@ -181,6 +262,7 @@ export function ControlPanel() {
                         min={-45}
                         max={45}
                         suffix="°"
+                        defaultValue={defaultSettings.rotateY}
                     />
                     <SliderControl
                         label="Rotate"
@@ -189,6 +271,7 @@ export function ControlPanel() {
                         min={-180}
                         max={180}
                         suffix="°"
+                        defaultValue={defaultSettings.rotateZ}
                     />
                     <SliderControl
                         label="Perspective"
@@ -198,48 +281,82 @@ export function ControlPanel() {
                         max={2000}
                         step={50}
                         suffix="px"
+                        defaultValue={defaultSettings.perspective}
                     />
                 </Section>
 
-                <Section title="Browser Frame">
-                    <Select
-                        value={store.browserFrame}
-                        onValueChange={(v) => store.setBrowserFrame(v as BrowserFrameStyle)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            <SelectItem value="macos">macOS</SelectItem>
-                            <SelectItem value="windows">Windows</SelectItem>
-                        </SelectContent>
-                    </Select>
+                <Section title="Browser Frame" defaultOpen={hasChanges(store, ["browserFrame"])}>
+                    <div className="flex items-center gap-2">
+                        <Select
+                            value={store.browserFrame}
+                            onValueChange={(v) => store.setBrowserFrame(v as BrowserFrameStyle)}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="macos">macOS</SelectItem>
+                                <SelectItem value="windows">Windows</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {store.browserFrame !== defaultSettings.browserFrame && (
+                            <button
+                                type="button"
+                                onClick={() => store.setBrowserFrame(defaultSettings.browserFrame)}
+                                className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                                title="Reset to default"
+                            >
+                                <RotateCcwIcon className="size-3" />
+                            </button>
+                        )}
+                    </div>
                 </Section>
 
-                <Section title="Background">
-                    <Select
-                        value={store.backgroundType}
-                        onValueChange={(v) => store.setBackgroundType(v as BackgroundType)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="gradient">Gradient</SelectItem>
-                            <SelectItem value="solid">Solid</SelectItem>
-                            <SelectItem value="transparent">Transparent</SelectItem>
-                        </SelectContent>
-                    </Select>
+                <Section
+                    title="Background"
+                    defaultOpen={hasChanges(store, [
+                        "backgroundType",
+                        "backgroundColor",
+                        "gradientFrom",
+                        "gradientTo",
+                        "gradientAngle",
+                    ])}
+                >
+                    <div className="flex items-center gap-2">
+                        <Select
+                            value={store.backgroundType}
+                            onValueChange={(v) => store.setBackgroundType(v as BackgroundType)}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="gradient">Gradient</SelectItem>
+                                <SelectItem value="solid">Solid</SelectItem>
+                                <SelectItem value="transparent">Transparent</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {store.backgroundType !== defaultSettings.backgroundType && (
+                            <button
+                                type="button"
+                                onClick={() => store.setBackgroundType(defaultSettings.backgroundType)}
+                                className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                                title="Reset to default"
+                            >
+                                <RotateCcwIcon className="size-3" />
+                            </button>
+                        )}
+                    </div>
 
                     {store.backgroundType === "solid" && (
-                        <ColorInput label="Color" value={store.backgroundColor} onChange={store.setBackgroundColor} />
+                        <ColorInput label="Color" value={store.backgroundColor} onChange={store.setBackgroundColor} defaultValue={defaultSettings.backgroundColor} />
                     )}
 
                     {store.backgroundType === "gradient" && (
                         <div className="space-y-3">
-                            <ColorInput label="From" value={store.gradientFrom} onChange={store.setGradientFrom} />
-                            <ColorInput label="To" value={store.gradientTo} onChange={store.setGradientTo} />
+                            <ColorInput label="From" value={store.gradientFrom} onChange={store.setGradientFrom} defaultValue={defaultSettings.gradientFrom} />
+                            <ColorInput label="To" value={store.gradientTo} onChange={store.setGradientTo} defaultValue={defaultSettings.gradientTo} />
                             <SliderControl
                                 label="Angle"
                                 value={store.gradientAngle}
@@ -247,12 +364,13 @@ export function ControlPanel() {
                                 min={0}
                                 max={360}
                                 suffix="°"
+                                defaultValue={defaultSettings.gradientAngle}
                             />
                         </div>
                     )}
                 </Section>
 
-                <Section title="Spacing & Scale">
+                <Section title="Spacing & Scale" defaultOpen={hasChanges(store, ["padding", "scale"])}>
                     <SliderControl
                         label="Padding"
                         value={store.padding}
@@ -260,6 +378,7 @@ export function ControlPanel() {
                         min={0}
                         max={200}
                         suffix="px"
+                        defaultValue={defaultSettings.padding}
                     />
                     <SliderControl
                         label="Scale"
@@ -268,6 +387,7 @@ export function ControlPanel() {
                         min={0.5}
                         max={2}
                         step={0.05}
+                        defaultValue={defaultSettings.scale}
                     />
                 </Section>
             </div>

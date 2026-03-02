@@ -30,17 +30,16 @@ describe("presets", () => {
         }
     });
 
-    it("Clean preset disables shadow and uses solid background", () => {
-        const clean = presets.find((p) => p.name === "Clean");
-        expect(clean).toBeDefined();
-        expect(clean?.settings.shadowEnabled).toBe(false);
-        expect(clean?.settings.backgroundType).toBe("solid");
+    it("Default preset matches defaultSettings", () => {
+        const def = presets.find((p) => p.name === "Default");
+        expect(def).toBeDefined();
+        expect(def?.settings).toEqual(defaultSettings);
     });
 
-    it("macOS preset uses macos browser frame", () => {
-        const macos = presets.find((p) => p.name === "macOS");
-        expect(macos).toBeDefined();
-        expect(macos?.settings.browserFrame).toBe("macos");
+    it("Mockup preset uses macos browser frame", () => {
+        const mockup = presets.find((p) => p.name === "Mockup");
+        expect(mockup).toBeDefined();
+        expect(mockup?.settings.browserFrame).toBe("macos");
     });
 
     it("Minimal preset uses transparent background", () => {
