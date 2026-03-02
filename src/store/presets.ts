@@ -8,40 +8,18 @@ interface Preset {
 
 export const presets: Preset[] = [
     {
-        name: "Clean",
-        settings: {
-            ...defaultSettings,
-            shadowEnabled: false,
-            backgroundType: "solid",
-            backgroundColor: "#ffffff",
-            padding: 48,
-            borderRadius: 8,
-        },
-    },
-    {
-        name: "macOS",
+        name: "Mockup",
         settings: {
             ...defaultSettings,
             browserFrame: "macos",
             borderRadius: 12,
-            shadowBlur: 60,
-            shadowOffsetY: 30,
-            shadowOpacity: 0.35,
-            padding: 80,
-        },
-    },
-    {
-        name: "Presentation",
-        settings: {
-            ...defaultSettings,
-            padding: 100,
-            borderRadius: 16,
-            shadowBlur: 50,
-            shadowOffsetY: 25,
-            shadowOpacity: 0.25,
-            gradientFrom: "#1e1b4b",
-            gradientTo: "#312e81",
-            gradientAngle: 160,
+            shadowBlur: 24,
+            rotateX: -2,
+            rotateY: -3,
+            backgroundType: "transparent",
+            shadowOffsetY: 12,
+            shadowOpacity: 0.3,
+            padding: 0,
         },
     },
     {

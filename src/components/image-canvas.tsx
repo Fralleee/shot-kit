@@ -58,7 +58,7 @@ export function ImageCanvas() {
                 Right-click the image to copy. Paste a new image anytime with Ctrl+V.
             </p>
 
-            <div className="relative flex-1 w-full min-h-0 flex items-center justify-center overflow-auto">
+            <div className="relative flex-1 w-full min-h-0 flex items-center justify-center overflow-hidden">
                 <div
                     ref={canvasRef}
                     role="img"

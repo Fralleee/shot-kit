@@ -1,10 +1,24 @@
 import type { ReactNode } from "react";
 import type { BrowserFrameStyle } from "@/store/editor-store";
+import { useEditorStore } from "@/store/editor-store";
 
 interface BrowserFrameProps {
     style: BrowserFrameStyle;
     children: ReactNode;
     borderRadius: number;
+}
+
+function UrlBar() {
+    const url = useEditorStore((s) => s.browserFrameUrl);
+    const setUrl = useEditorStore((s) => s.setBrowserFrameUrl);
+    return (
+        <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="bg-transparent text-xs text-gray-500 text-center w-full outline-none"
+        />
+    );
 }
 
 function MacOSFrame({ children, borderRadius }: { children: ReactNode; borderRadius: number }) {
@@ -17,8 +31,8 @@ function MacOSFrame({ children, borderRadius }: { children: ReactNode; borderRad
                     <div className="w-3 h-3 rounded-full bg-[#28c940]" />
                 </div>
                 <div className="flex-1 flex justify-center">
-                    <div className="bg-white/60 rounded-md px-12 py-1 text-xs text-gray-500 text-center min-w-[200px]">
-                        localhost:3000
+                    <div className="bg-white/60 rounded-md px-12 py-1 min-w-[200px]">
+                        <UrlBar />
                     </div>
                 </div>
                 <div className="w-[52px]" />
@@ -57,8 +71,8 @@ function WindowsFrame({ children, borderRadius }: { children: ReactNode; borderR
                             <path d="M9 18l6-6-6-6" />
                         </svg>
                     </div>
-                    <div className="bg-[#e8e8e8] rounded-full px-4 py-1 text-xs text-gray-500 flex-1 text-center">
-                        localhost:3000
+                    <div className="bg-[#e8e8e8] rounded-full px-4 py-1 flex-1">
+                        <UrlBar />
                     </div>
                 </div>
                 <div className="flex gap-2 ml-3">
