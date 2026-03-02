@@ -1,4 +1,18 @@
-import { ChevronDownIcon, RotateCcwIcon } from "lucide-react";
+import {
+    ChevronDownIcon,
+    DicesIcon,
+    type LucideIcon,
+    MaximizeIcon,
+    PaintbrushIcon,
+    PanelTopIcon,
+    Rotate3dIcon,
+    RotateCcwIcon,
+    SlidersHorizontalIcon,
+    SparklesIcon,
+    SquareRoundCornerIcon,
+    SunDimIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,17 +28,22 @@ function hasChanges(store: EditorSettings, keys: (keyof EditorSettings)[]) {
 
 function Section({
     title,
+    icon: Icon,
     defaultOpen = false,
     children,
 }: {
     title: string;
+    icon: LucideIcon;
     defaultOpen?: boolean;
     children: React.ReactNode;
 }) {
     return (
         <Collapsible defaultOpen={defaultOpen} className="border-b border-border last:border-b-0">
-            <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight hover:text-foreground/80 transition-colors [&[data-state=open]>svg]:rotate-180">
-                {title}
+            <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight hover:text-foreground/80 transition-colors [&[data-state=open]>svg:last-child]:rotate-180">
+                <span className="flex items-center gap-2">
+                    <Icon className="size-4 text-muted-foreground" />
+                    {title}
+                </span>
                 <ChevronDownIcon className="size-4 text-muted-foreground transition-transform duration-200" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 pb-4">{children}</CollapsibleContent>
@@ -58,14 +77,14 @@ function SliderControl({
                 <Label className="text-xs text-muted-foreground">{label}</Label>
                 <div className="flex items-center gap-1">
                     {changed && (
-                        <button
-                            type="button"
+                        <Button
+                            variant="ghost"
+                            size="icon-xs"
                             onClick={() => onChange(defaultValue)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
                             title="Reset to default"
                         >
-                            <RotateCcwIcon className="size-3" />
-                        </button>
+                            <RotateCcwIcon />
+                        </Button>
                     )}
                     <input
                         type="number"
@@ -104,14 +123,14 @@ function ColorInput({
             <Label className="text-xs text-muted-foreground">{label}</Label>
             <div className="flex items-center gap-2">
                 {changed && (
-                    <button
-                        type="button"
+                    <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={() => onChange(defaultValue)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
                         title="Reset to default"
                     >
-                        <RotateCcwIcon className="size-3" />
-                    </button>
+                        <RotateCcwIcon />
+                    </Button>
                 )}
                 <input
                     type="color"
@@ -130,36 +149,35 @@ export function ControlPanel() {
 
     return (
         <div className="w-72 shrink-0 border-l border-border bg-card overflow-y-auto h-full">
+            <div className="sticky top-0 z-10 bg-card border-b border-border px-4 py-3">
+                <h2 className="flex items-center gap-2 text-base font-semibold">
+                    <SlidersHorizontalIcon className="size-4" />
+                    Settings
+                </h2>
+            </div>
             <div className="p-4 space-y-5">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-base font-semibold">Settings</h2>
-                    <button
-                        type="button"
-                        onClick={() => store.resetSettings()}
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                        title="Reset to defaults"
-                    >
-                        <RotateCcwIcon className="size-3" />
-                        Reset
-                    </button>
-                </div>
 
-                <Section title="Presets" defaultOpen>
+                <Section title="Presets" icon={SparklesIcon} defaultOpen>
                     <div className="grid grid-cols-2 gap-2">
                         {presets.map((preset) => (
-                            <button
+                            <Button
                                 key={preset.name}
-                                type="button"
+                                variant="outline"
+                                size="sm"
                                 onClick={() => store.applySettings(preset.settings)}
-                                className="px-3 py-1.5 text-xs font-medium rounded-md border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
+                                <preset.icon className="size-3" />
                                 {preset.name}
-                            </button>
+                            </Button>
                         ))}
                     </div>
+                    <Button variant="outline" size="sm" className="w-full mt-2" onClick={() => store.randomizeSettings()}>
+                        <DicesIcon className="size-3" />
+                        Randomize
+                    </Button>
                 </Section>
 
-                <Section title="Corners" defaultOpen={hasChanges(store, ["borderRadius"])}>
+                <Section title="Corners" icon={SquareRoundCornerIcon} defaultOpen={hasChanges(store, ["borderRadius"])}>
                     <SliderControl
                         label="Border Radius"
                         value={store.borderRadius}
@@ -173,6 +191,7 @@ export function ControlPanel() {
 
                 <Section
                     title="Shadow"
+                    icon={SunDimIcon}
                     defaultOpen={hasChanges(store, [
                         "shadowEnabled",
                         "shadowBlur",
@@ -187,14 +206,14 @@ export function ControlPanel() {
                         <Label className="text-xs text-muted-foreground">Enabled</Label>
                         <div className="flex items-center gap-2">
                             {store.shadowEnabled !== defaultSettings.shadowEnabled && (
-                                <button
-                                    type="button"
+                                <Button
+                                    variant="ghost"
+                                    size="icon-xs"
                                     onClick={() => store.setShadowEnabled(defaultSettings.shadowEnabled)}
-                                    className="text-muted-foreground hover:text-foreground transition-colors"
                                     title="Reset to default"
                                 >
-                                    <RotateCcwIcon className="size-3" />
-                                </button>
+                                    <RotateCcwIcon />
+                                </Button>
                             )}
                             <Switch checked={store.shadowEnabled} onCheckedChange={store.setShadowEnabled} />
                         </div>
@@ -258,6 +277,7 @@ export function ControlPanel() {
 
                 <Section
                     title="Rotate & Tilt"
+                    icon={Rotate3dIcon}
                     defaultOpen={hasChanges(store, ["rotateX", "rotateY", "rotateZ", "perspective"])}
                 >
                     <SliderControl
@@ -299,7 +319,7 @@ export function ControlPanel() {
                     />
                 </Section>
 
-                <Section title="Browser Frame" defaultOpen={hasChanges(store, ["browserFrame"])}>
+                <Section title="Browser Frame" icon={PanelTopIcon} defaultOpen={hasChanges(store, ["browserFrame"])}>
                     <div className="flex items-center gap-2">
                         <Select
                             value={store.browserFrame}
@@ -315,20 +335,21 @@ export function ControlPanel() {
                             </SelectContent>
                         </Select>
                         {store.browserFrame !== defaultSettings.browserFrame && (
-                            <button
-                                type="button"
+                            <Button
+                                variant="ghost"
+                                size="icon-xs"
                                 onClick={() => store.setBrowserFrame(defaultSettings.browserFrame)}
-                                className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
                                 title="Reset to default"
                             >
-                                <RotateCcwIcon className="size-3" />
-                            </button>
+                                <RotateCcwIcon />
+                            </Button>
                         )}
                     </div>
                 </Section>
 
                 <Section
                     title="Background"
+                    icon={PaintbrushIcon}
                     defaultOpen={hasChanges(store, [
                         "backgroundType",
                         "backgroundColor",
@@ -352,14 +373,14 @@ export function ControlPanel() {
                             </SelectContent>
                         </Select>
                         {store.backgroundType !== defaultSettings.backgroundType && (
-                            <button
-                                type="button"
+                            <Button
+                                variant="ghost"
+                                size="icon-xs"
                                 onClick={() => store.setBackgroundType(defaultSettings.backgroundType)}
-                                className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
                                 title="Reset to default"
                             >
-                                <RotateCcwIcon className="size-3" />
-                            </button>
+                                <RotateCcwIcon />
+                            </Button>
                         )}
                     </div>
 
@@ -374,6 +395,21 @@ export function ControlPanel() {
 
                     {store.backgroundType === "gradient" && (
                         <div className="space-y-3">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => {
+                                    const rand = () =>
+                                        `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, "0")}`;
+                                    store.setGradientFrom(rand());
+                                    store.setGradientTo(rand());
+                                    store.setGradientAngle(Math.floor(Math.random() * 360));
+                                }}
+                            >
+                                <DicesIcon className="size-3" />
+                                Randomize
+                            </Button>
                             <ColorInput
                                 label="From"
                                 value={store.gradientFrom}
@@ -399,7 +435,7 @@ export function ControlPanel() {
                     )}
                 </Section>
 
-                <Section title="Spacing & Scale" defaultOpen={hasChanges(store, ["padding", "scale"])}>
+                <Section title="Spacing & Scale" icon={MaximizeIcon} defaultOpen={hasChanges(store, ["padding", "scale"])}>
                     <SliderControl
                         label="Padding"
                         value={store.padding}
@@ -423,3 +459,5 @@ export function ControlPanel() {
         </div>
     );
 }
+
+

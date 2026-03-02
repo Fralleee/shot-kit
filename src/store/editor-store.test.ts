@@ -165,6 +165,134 @@ describe("editor-store", () => {
         });
     });
 
+    describe("randomizeSettings", () => {
+        it("changes settings from defaults", () => {
+            // Run multiple times to reduce flakiness from random values
+            let anyDifferent = false;
+            for (let i = 0; i < 10; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const state = useEditorStore.getState();
+                if (
+                    state.borderRadius !== defaultSettings.borderRadius ||
+                    state.padding !== defaultSettings.padding ||
+                    state.backgroundType !== defaultSettings.backgroundType
+                ) {
+                    anyDifferent = true;
+                    break;
+                }
+                // Reset for next iteration
+                useEditorStore.setState({ ...defaultSettings });
+            }
+            expect(anyDifferent).toBe(true);
+        });
+
+        it("keeps borderRadius within 0-24", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { borderRadius } = useEditorStore.getState();
+                expect(borderRadius).toBeGreaterThanOrEqual(0);
+                expect(borderRadius).toBeLessThanOrEqual(24);
+            }
+        });
+
+        it("keeps padding within 12-64", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { padding } = useEditorStore.getState();
+                expect(padding).toBeGreaterThanOrEqual(12);
+                expect(padding).toBeLessThanOrEqual(64);
+            }
+        });
+
+        it("always sets scale to 1", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                expect(useEditorStore.getState().scale).toBe(1);
+            }
+        });
+
+        it("always sets shadowColor to #000000", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                expect(useEditorStore.getState().shadowColor).toBe("#000000");
+            }
+        });
+
+        it("keeps tilt values within -10 to 10 (or 0 when disabled)", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { rotateX, rotateY } = useEditorStore.getState();
+                expect(rotateX).toBeGreaterThanOrEqual(-10);
+                expect(rotateX).toBeLessThanOrEqual(10);
+                expect(rotateY).toBeGreaterThanOrEqual(-10);
+                expect(rotateY).toBeLessThanOrEqual(10);
+            }
+        });
+
+        it("keeps rotateZ within -2 to 2", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { rotateZ } = useEditorStore.getState();
+                expect(rotateZ).toBeGreaterThanOrEqual(-2);
+                expect(rotateZ).toBeLessThanOrEqual(2);
+            }
+        });
+
+        it("keeps perspective within 600-1400", () => {
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { perspective } = useEditorStore.getState();
+                expect(perspective).toBeGreaterThanOrEqual(600);
+                expect(perspective).toBeLessThanOrEqual(1400);
+            }
+        });
+
+        it("only generates gradient, solid, or transparent background types", () => {
+            const validTypes = new Set(["gradient", "solid", "transparent"]);
+            for (let i = 0; i < 20; i++) {
+                useEditorStore.getState().randomizeSettings();
+                expect(validTypes.has(useEditorStore.getState().backgroundType)).toBe(true);
+            }
+        });
+
+        it("preserves image when randomizing", () => {
+            useEditorStore.getState().setImage("data:image/png;base64,abc", "test.png");
+            useEditorStore.getState().randomizeSettings();
+            const { image, fileName } = useEditorStore.getState();
+            expect(image).toBe("data:image/png;base64,abc");
+            expect(fileName).toBe("test.png");
+        });
+
+        it("keeps shadow blur within 10-60 when shadow is enabled", () => {
+            for (let i = 0; i < 30; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { shadowEnabled, shadowBlur } = useEditorStore.getState();
+                if (shadowEnabled) {
+                    expect(shadowBlur).toBeGreaterThanOrEqual(10);
+                    expect(shadowBlur).toBeLessThanOrEqual(60);
+                }
+            }
+        });
+
+        it("keeps shadow opacity within 0.15-0.5 when shadow is enabled", () => {
+            for (let i = 0; i < 30; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { shadowEnabled, shadowOpacity } = useEditorStore.getState();
+                if (shadowEnabled) {
+                    expect(shadowOpacity).toBeGreaterThanOrEqual(0.15);
+                    expect(shadowOpacity).toBeLessThanOrEqual(0.5);
+                }
+            }
+        });
+    });
+
+    describe("setBrowserFrameUrl", () => {
+        it("sets browser frame URL", () => {
+            useEditorStore.getState().setBrowserFrameUrl("example.com");
+            expect(useEditorStore.getState().browserFrameUrl).toBe("example.com");
+        });
+    });
+
     describe("reset", () => {
         it("resets everything including image", () => {
             useEditorStore.getState().setImage("data:image/png;base64,abc", "test.png");
