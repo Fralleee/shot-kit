@@ -2,6 +2,9 @@
 
 Screenshot beautifier. Paste a screenshot, style it, copy it back.
 
+<img width="1280" height="768" alt="image" src="https://github.com/user-attachments/assets/231b6d5c-ca7f-4612-ba59-4acd9ec01d83" />
+
+
 ## Features
 
 - Paste (Ctrl+V), drag-drop, or file upload
