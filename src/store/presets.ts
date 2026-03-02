@@ -8,31 +8,22 @@ interface Preset {
 
 export const presets: Preset[] = [
     {
+        name: "Default",
+        settings: defaultSettings,
+    },
+    {
         name: "Mockup",
         settings: {
             ...defaultSettings,
             browserFrame: "macos",
             borderRadius: 12,
             shadowBlur: 24,
-            rotateX: -2,
-            rotateY: -3,
+            rotateX: 4,
+            rotateY: -4,
             backgroundType: "transparent",
             shadowOffsetY: 12,
             shadowOpacity: 0.3,
             padding: 0,
-        },
-    },
-    {
-        name: "Social",
-        settings: {
-            ...defaultSettings,
-            padding: 80,
-            borderRadius: 20,
-            shadowBlur: 40,
-            shadowOpacity: 0.2,
-            gradientFrom: "#f97316",
-            gradientTo: "#ec4899",
-            gradientAngle: 135,
         },
     },
     {
