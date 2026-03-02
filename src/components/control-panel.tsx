@@ -16,7 +16,11 @@ function Section({
     title,
     defaultOpen = false,
     children,
-}: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
+}: {
+    title: string;
+    defaultOpen?: boolean;
+    children: React.ReactNode;
+}) {
     return (
         <Collapsible defaultOpen={defaultOpen} className="border-b border-border last:border-b-0">
             <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight hover:text-foreground/80 transition-colors [&[data-state=open]>svg]:rotate-180">
@@ -88,7 +92,12 @@ function ColorInput({
     value,
     onChange,
     defaultValue,
-}: { label: string; value: string; onChange: (v: string) => void; defaultValue: string }) {
+}: {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    defaultValue: string;
+}) {
     const changed = value !== defaultValue;
     return (
         <div className="flex items-center justify-between">
@@ -237,7 +246,12 @@ export function ControlPanel() {
                                 step={0.05}
                                 defaultValue={defaultSettings.shadowOpacity}
                             />
-                            <ColorInput label="Color" value={store.shadowColor} onChange={store.setShadowColor} defaultValue={defaultSettings.shadowColor} />
+                            <ColorInput
+                                label="Color"
+                                value={store.shadowColor}
+                                onChange={store.setShadowColor}
+                                defaultValue={defaultSettings.shadowColor}
+                            />
                         </div>
                     )}
                 </Section>
@@ -350,13 +364,28 @@ export function ControlPanel() {
                     </div>
 
                     {store.backgroundType === "solid" && (
-                        <ColorInput label="Color" value={store.backgroundColor} onChange={store.setBackgroundColor} defaultValue={defaultSettings.backgroundColor} />
+                        <ColorInput
+                            label="Color"
+                            value={store.backgroundColor}
+                            onChange={store.setBackgroundColor}
+                            defaultValue={defaultSettings.backgroundColor}
+                        />
                     )}
 
                     {store.backgroundType === "gradient" && (
                         <div className="space-y-3">
-                            <ColorInput label="From" value={store.gradientFrom} onChange={store.setGradientFrom} defaultValue={defaultSettings.gradientFrom} />
-                            <ColorInput label="To" value={store.gradientTo} onChange={store.setGradientTo} defaultValue={defaultSettings.gradientTo} />
+                            <ColorInput
+                                label="From"
+                                value={store.gradientFrom}
+                                onChange={store.setGradientFrom}
+                                defaultValue={defaultSettings.gradientFrom}
+                            />
+                            <ColorInput
+                                label="To"
+                                value={store.gradientTo}
+                                onChange={store.setGradientTo}
+                                defaultValue={defaultSettings.gradientTo}
+                            />
                             <SliderControl
                                 label="Angle"
                                 value={store.gradientAngle}
