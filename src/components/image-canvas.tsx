@@ -1,13 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useImageExport } from "@/hooks/use-image-export";
-import { getBackground, getShadow, getTransform } from "@/lib/style-utils";
+import { getBackground, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
 import { useEditorStore } from "@/store/editor-store";
 import { BrowserFrame } from "./browser-frame";
 
 export function ImageCanvas() {
     const store = useEditorStore();
     const { canvasRef, copyToClipboard, download, copyLabel, downloadLabel } = useImageExport();
+    const innerRef = useRef<HTMLDivElement>(null);
     const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
+    const [innerSize, setInnerSize] = useState<{ w: number; h: number } | null>(null);
+
+    useEffect(() => {
+        const el = innerRef.current;
+        if (!el) return;
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const w = entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+                const h = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+                setInnerSize({ w, h });
+            }
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    const overflow = innerSize
+        ? getTransformOverflow(innerSize.w, innerSize.h, store)
+        : { top: 0, right: 0, bottom: 0, left: 0 };
+    const padTop = store.padding + overflow.top;
+    const padRight = store.padding + overflow.right;
+    const padBottom = store.padding + overflow.bottom;
+    const padLeft = store.padding + overflow.left;
 
     useEffect(() => {
         if (!store.image) {
@@ -67,10 +91,14 @@ export function ImageCanvas() {
                     className="relative flex items-center justify-center shrink-0"
                     style={{
                         background: getBackground(store),
-                        padding: store.padding,
+                        paddingTop: padTop,
+                        paddingRight: padRight,
+                        paddingBottom: padBottom,
+                        paddingLeft: padLeft,
                     }}
                 >
                     <div
+                        ref={innerRef}
                         style={{
                             transform: getTransform(store),
                             boxShadow: getShadow(store),
@@ -105,7 +133,7 @@ export function ImageCanvas() {
                     </span>
                     <span className="text-border">|</span>
                     <span>
-                        Output: {naturalSize.w + store.padding * 2} x {naturalSize.h + store.padding * 2}px @2x
+                        Output: {naturalSize.w + padLeft + padRight} x {naturalSize.h + padTop + padBottom}px @2x
                     </span>
                     {store.fileName && (
                         <>
