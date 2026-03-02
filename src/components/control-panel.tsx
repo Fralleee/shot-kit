@@ -156,7 +156,6 @@ export function ControlPanel() {
                 </h2>
             </div>
             <div className="p-4 space-y-5">
-
                 <Section title="Presets" icon={SparklesIcon} defaultOpen>
                     <div className="grid grid-cols-2 gap-2">
                         {presets.map((preset) => (
@@ -171,7 +170,12 @@ export function ControlPanel() {
                             </Button>
                         ))}
                     </div>
-                    <Button variant="outline" size="sm" className="w-full mt-2" onClick={() => store.randomizeSettings()}>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mt-2"
+                        onClick={() => store.randomizeSettings()}
+                    >
                         <DicesIcon className="size-3" />
                         Randomize
                     </Button>
@@ -401,7 +405,9 @@ export function ControlPanel() {
                                 className="w-full"
                                 onClick={() => {
                                     const rand = () =>
-                                        `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, "0")}`;
+                                        `#${Math.floor(Math.random() * 0xffffff)
+                                            .toString(16)
+                                            .padStart(6, "0")}`;
                                     store.setGradientFrom(rand());
                                     store.setGradientTo(rand());
                                     store.setGradientAngle(Math.floor(Math.random() * 360));
@@ -435,7 +441,11 @@ export function ControlPanel() {
                     )}
                 </Section>
 
-                <Section title="Spacing & Scale" icon={MaximizeIcon} defaultOpen={hasChanges(store, ["padding", "scale"])}>
+                <Section
+                    title="Spacing & Scale"
+                    icon={MaximizeIcon}
+                    defaultOpen={hasChanges(store, ["padding", "scale"])}
+                >
                     <SliderControl
                         label="Padding"
                         value={store.padding}
@@ -459,5 +469,3 @@ export function ControlPanel() {
         </div>
     );
 }
-
-
