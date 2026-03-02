@@ -1,4 +1,6 @@
+import { ClipboardCopyIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useImageExport } from "@/hooks/use-image-export";
 import { getBackground, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
 import { useEditorStore } from "@/store/editor-store";
@@ -55,27 +57,18 @@ export function ImageCanvas() {
     return (
         <div className="flex flex-col items-center gap-4 w-full h-full">
             <div className="flex gap-2 shrink-0">
-                <button
-                    type="button"
-                    onClick={copyToClipboard}
-                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                >
+                <Button onClick={copyToClipboard}>
+                    <ClipboardCopyIcon className="size-4" />
                     {copyLabel}
-                </button>
-                <button
-                    type="button"
-                    onClick={download}
-                    className="px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
-                >
+                </Button>
+                <Button variant="outline" onClick={download}>
+                    <DownloadIcon className="size-4" />
                     {downloadLabel}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => store.reset()}
-                    className="px-4 py-2 text-sm font-medium bg-destructive/10 text-destructive rounded-lg hover:bg-destructive/20 transition-colors"
-                >
+                </Button>
+                <Button variant="destructive" onClick={() => store.reset()}>
+                    <Trash2Icon className="size-4" />
                     Clear
-                </button>
+                </Button>
             </div>
 
             <p className="text-xs text-muted-foreground shrink-0">

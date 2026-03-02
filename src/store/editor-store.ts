@@ -55,6 +55,7 @@ interface EditorState extends EditorSettings {
     setPadding: (padding: number) => void;
     setScale: (scale: number) => void;
     applySettings: (settings: Partial<EditorSettings>) => void;
+    randomizeSettings: () => void;
     resetSettings: () => void;
     reset: () => void;
 }
@@ -121,6 +122,42 @@ export const useEditorStore = create<EditorState>()(
             setPadding: (padding) => set({ padding }),
             setScale: (scale) => set({ scale }),
             applySettings: (settings) => set(settings),
+            randomizeSettings: () => {
+                const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+                const randInt = (min: number, max: number) => Math.floor(rand(min, max + 1));
+                const randColor = () =>
+                    `#${Math.floor(Math.random() * 0xffffff)
+                        .toString(16)
+                        .padStart(6, "0")}`;
+                const pick = <T>(items: T[]) => items[randInt(0, items.length - 1)];
+
+                const useTilt = Math.random() < 0.7;
+                const useRotate = Math.random() < 0.15;
+                const useShadow = Math.random() < 0.8;
+                const bgType = pick<BackgroundType>(["gradient", "gradient", "solid"]);
+
+                set({
+                    borderRadius: randInt(0, 24),
+                    shadowEnabled: useShadow,
+                    shadowBlur: useShadow ? randInt(10, 60) : defaultSettings.shadowBlur,
+                    shadowSpread: useShadow ? randInt(-5, 10) : defaultSettings.shadowSpread,
+                    shadowOffsetX: useShadow ? randInt(-10, 10) : defaultSettings.shadowOffsetX,
+                    shadowOffsetY: useShadow ? randInt(5, 30) : defaultSettings.shadowOffsetY,
+                    shadowColor: "#000000",
+                    shadowOpacity: useShadow ? Math.round(rand(0.15, 0.5) * 100) / 100 : defaultSettings.shadowOpacity,
+                    rotateX: useTilt ? randInt(-10, 10) : 0,
+                    rotateY: useTilt ? randInt(-10, 10) : 0,
+                    rotateZ: useRotate ? pick([-2, -1, 0, 1, 2]) : 0,
+                    perspective: randInt(600, 1400),
+                    backgroundType: bgType,
+                    backgroundColor: bgType === "solid" ? randColor() : defaultSettings.backgroundColor,
+                    gradientFrom: bgType === "gradient" ? randColor() : defaultSettings.gradientFrom,
+                    gradientTo: bgType === "gradient" ? randColor() : defaultSettings.gradientTo,
+                    gradientAngle: bgType === "gradient" ? randInt(0, 359) : defaultSettings.gradientAngle,
+                    padding: randInt(12, 64),
+                    scale: 1,
+                });
+            },
             resetSettings: () => set({ ...defaultSettings }),
             reset: () => set({ image: null, fileName: null, ...defaultSettings }),
         }),

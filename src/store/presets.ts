@@ -1,18 +1,22 @@
+import { CircleDotIcon, type LucideIcon, MonitorSmartphoneIcon, SquareIcon } from "lucide-react";
 import type { EditorSettings } from "./editor-store";
 import { defaultSettings } from "./editor-store";
 
 interface Preset {
     name: string;
+    icon: LucideIcon;
     settings: Partial<EditorSettings>;
 }
 
 export const presets: Preset[] = [
     {
         name: "Default",
+        icon: CircleDotIcon,
         settings: defaultSettings,
     },
     {
         name: "Mockup",
+        icon: MonitorSmartphoneIcon,
         settings: {
             ...defaultSettings,
             browserFrame: "macos",
@@ -28,6 +32,7 @@ export const presets: Preset[] = [
     },
     {
         name: "Minimal",
+        icon: SquareIcon,
         settings: {
             ...defaultSettings,
             backgroundType: "transparent",
