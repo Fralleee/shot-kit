@@ -53,10 +53,10 @@ export function DropZone() {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            className={`flex flex-col items-center justify-center w-full h-full min-h-100 border-2 border-dashed rounded-xl transition-colors cursor-pointer ${
+            className={`flex flex-col items-center justify-center w-full h-full min-h-64 sm:min-h-80 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer backdrop-blur-sm ${
                 isDragging
-                    ? "border-primary bg-primary/5"
-                    : "border-muted-foreground/25 hover:border-muted-foreground/50"
+                    ? "border-brand-indigo bg-brand-indigo/10 scale-[1.01]"
+                    : "border-border hover:border-ring/50 bg-muted/30 hover:bg-muted/50 dark:border-white/15 dark:hover:border-white/30 dark:bg-white/3 dark:hover:bg-white/5"
             }`}
             onClick={openFilePicker}
         >
@@ -71,7 +71,7 @@ export function DropZone() {
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="opacity-50"
+                    className="opacity-40"
                     aria-hidden="true"
                 >
                     <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
@@ -79,7 +79,7 @@ export function DropZone() {
                     <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                 </svg>
                 <div className="text-center">
-                    <p className="text-lg font-medium">Paste, drop, or click to upload</p>
+                    <p className="text-lg font-medium text-foreground/80">Paste, drop, or click to upload</p>
                     <p className="text-sm mt-1">Ctrl+V to paste from clipboard</p>
                 </div>
             </div>
