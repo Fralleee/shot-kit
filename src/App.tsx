@@ -14,15 +14,15 @@ function App() {
 
     if (!image) {
         return (
-            <div className="relative flex items-center justify-center h-screen p-6 sm:p-8 overflow-hidden bg-background text-foreground">
+            <div className="relative flex items-center justify-center overflow-hidden h-screen p-6 sm:p-8 bg-background text-foreground">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,var(--color-brand-indigo)/0.12,transparent_70%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,var(--color-brand-indigo)/0.2,transparent_70%)]" />
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_100%,var(--color-brand-pink)/0.08,transparent_60%)] dark:bg-[radial-gradient(ellipse_60%_50%_at_80%_100%,var(--color-brand-pink)/0.13,transparent_60%)]" />
-                <div className="relative w-full max-w-xl z-10">
+                <div className="relative z-10 w-full max-w-xl">
                     <div className="flex flex-col items-center gap-4 mb-10">
                         <img
                             src="/favicon.svg"
                             alt=""
-                            className="size-16 sm:size-20 drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]"
+                            className="size-16 sm:size-20 drop-shadow-[0_0_30px_var(--color-brand-indigo)]"
                         />
                         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-linear-to-r from-brand-indigo via-brand-purple to-brand-pink bg-clip-text text-transparent">
                             ShotKit
