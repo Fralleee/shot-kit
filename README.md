@@ -1,8 +1,8 @@
 # ShotKit
 
-Screenshot beautifier. Paste a screenshot, style it, copy it back.
+Screenshot beautifier. Paste a screenshot, style it, and copy it back.
 
-<img width="1280" height="768" alt="image" src="https://github.com/user-attachments/assets/231b6d5c-ca7f-4612-ba59-4acd9ec01d83" />
+<img width="1280" height="768" alt="image" src="https://github.com/user-attachments/assets/f8f520eb-fd29-4b7a-a229-4d9f38099e08" />
 
 
 ## Features
@@ -13,7 +13,7 @@ Screenshot beautifier. Paste a screenshot, style it, copy it back.
 - Gradient, solid, or transparent backgrounds
 - Adjustable padding and scale
 - Copy to clipboard or download as PNG (2x resolution)
-- Right-click image to quick-copy
+- Right-click the image to quickly copy
 
 ## Setup
 
