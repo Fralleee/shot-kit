@@ -1,17 +1,21 @@
 import { ClipboardCopyIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useCanvasZoom } from "@/hooks/use-canvas-zoom";
 import { useImageExport } from "@/hooks/use-image-export";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getBackground, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
 import { useEditorStore } from "@/store/editor-store";
 import { BrowserFrame } from "./browser-frame";
+import { ZoomControls } from "./zoom-controls";
 
 export function ImageCanvas() {
     const store = useEditorStore();
     const isMobile = useIsMobile();
     const { canvasRef, copyToClipboard, download, copyLabel, downloadLabel } = useImageExport();
     const innerRef = useRef<HTMLDivElement>(null);
+    const zoomContainerRef = useRef<HTMLDivElement>(null);
+    const { zoom, setZoom, zoomIn, zoomOut, resetZoom } = useCanvasZoom(zoomContainerRef);
     const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
     const [innerSize, setInnerSize] = useState<{ w: number; h: number } | null>(null);
 
@@ -77,48 +81,57 @@ export function ImageCanvas() {
                 Right-click the image to copy. Paste a new image anytime with Ctrl+V.
             </p>
 
-            <div className="relative flex-1 w-full min-h-0 flex items-center justify-center overflow-hidden">
-                <div
-                    ref={canvasRef}
-                    role="img"
-                    aria-label="Styled screenshot preview"
-                    onContextMenu={handleContextMenu}
-                    className="relative flex items-center justify-center shrink-0"
-                    style={{
-                        background: getBackground(store),
-                        paddingTop: padTop,
-                        paddingRight: padRight,
-                        paddingBottom: padBottom,
-                        paddingLeft: padLeft,
-                    }}
-                >
-                    <div
-                        ref={innerRef}
-                        style={{
-                            transform: getTransform(store),
-                            boxShadow: getShadow(store),
-                            borderRadius: store.borderRadius,
-                            overflow: "hidden",
-                        }}
-                    >
-                        <BrowserFrame
-                            style={store.browserFrame}
-                            borderRadius={store.browserFrame !== "none" ? store.borderRadius : 0}
-                        >
-                            <img
-                                src={store.image as string}
-                                alt="Screenshot"
-                                className="block h-auto"
+            <div ref={zoomContainerRef} className="relative flex-1 w-full min-h-0">
+                <div className="w-full h-full overflow-auto">
+                    <div className="min-w-full min-h-full flex items-center justify-center p-4">
+                        <div style={{ zoom: zoom / 100 }}>
+                            <div
+                                ref={canvasRef}
+                                role="img"
+                                aria-label="Styled screenshot preview"
+                                onContextMenu={handleContextMenu}
+                                className="relative flex items-center justify-center shrink-0"
                                 style={{
-                                    maxWidth: `calc(100vw - ${isMobile ? 0 : 288}px - ${isMobile ? "2rem" : "6rem"} - ${store.padding * 2}px)`,
-                                    maxHeight: `calc(100vh - 12rem - ${store.padding * 2}px)`,
-                                    ...(store.browserFrame === "none" ? { borderRadius: store.borderRadius } : {}),
+                                    background: getBackground(store),
+                                    paddingTop: padTop,
+                                    paddingRight: padRight,
+                                    paddingBottom: padBottom,
+                                    paddingLeft: padLeft,
                                 }}
-                                draggable={false}
-                            />
-                        </BrowserFrame>
+                            >
+                                <div
+                                    ref={innerRef}
+                                    style={{
+                                        transform: getTransform(store),
+                                        boxShadow: getShadow(store),
+                                        borderRadius: store.borderRadius,
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <BrowserFrame
+                                        style={store.browserFrame}
+                                        borderRadius={store.browserFrame !== "none" ? store.borderRadius : 0}
+                                    >
+                                        <img
+                                            src={store.image as string}
+                                            alt="Screenshot"
+                                            className="block h-auto"
+                                            style={{
+                                                maxWidth: `calc(100vw - ${isMobile ? 0 : 288}px - ${isMobile ? "2rem" : "6rem"} - ${store.padding * 2}px)`,
+                                                maxHeight: `calc(100vh - 12rem - ${store.padding * 2}px)`,
+                                                ...(store.browserFrame === "none"
+                                                    ? { borderRadius: store.borderRadius }
+                                                    : {}),
+                                            }}
+                                            draggable={false}
+                                        />
+                                    </BrowserFrame>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <ZoomControls zoom={zoom} setZoom={setZoom} zoomIn={zoomIn} zoomOut={zoomOut} resetZoom={resetZoom} />
             </div>
 
             {naturalSize && (
