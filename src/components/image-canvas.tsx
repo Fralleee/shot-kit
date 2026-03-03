@@ -2,12 +2,14 @@ import { ClipboardCopyIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useImageExport } from "@/hooks/use-image-export";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { getBackground, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
 import { useEditorStore } from "@/store/editor-store";
 import { BrowserFrame } from "./browser-frame";
 
 export function ImageCanvas() {
     const store = useEditorStore();
+    const isMobile = useIsMobile();
     const { canvasRef, copyToClipboard, download, copyLabel, downloadLabel } = useImageExport();
     const innerRef = useRef<HTMLDivElement>(null);
     const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -59,19 +61,19 @@ export function ImageCanvas() {
             <div className="flex gap-2 shrink-0">
                 <Button onClick={copyToClipboard}>
                     <ClipboardCopyIcon className="size-4" />
-                    {copyLabel}
+                    <span className="hidden sm:inline">{copyLabel}</span>
                 </Button>
                 <Button variant="outline" onClick={download}>
                     <DownloadIcon className="size-4" />
-                    {downloadLabel}
+                    <span className="hidden sm:inline">{downloadLabel}</span>
                 </Button>
                 <Button variant="destructive" onClick={() => store.reset()}>
                     <Trash2Icon className="size-4" />
-                    Clear
+                    <span className="hidden sm:inline">Clear</span>
                 </Button>
             </div>
 
-            <p className="text-xs text-muted-foreground shrink-0">
+            <p className="hidden md:block text-xs text-muted-foreground shrink-0">
                 Right-click the image to copy. Paste a new image anytime with Ctrl+V.
             </p>
 
@@ -108,7 +110,7 @@ export function ImageCanvas() {
                                 alt="Screenshot"
                                 className="block h-auto"
                                 style={{
-                                    maxWidth: `calc(100vw - 288px - 6rem - ${store.padding * 2}px)`,
+                                    maxWidth: `calc(100vw - ${isMobile ? 0 : 288}px - ${isMobile ? "2rem" : "6rem"} - ${store.padding * 2}px)`,
                                     maxHeight: `calc(100vh - 12rem - ${store.padding * 2}px)`,
                                     ...(store.browserFrame === "none" ? { borderRadius: store.borderRadius } : {}),
                                 }}
@@ -120,7 +122,7 @@ export function ImageCanvas() {
             </div>
 
             {naturalSize && (
-                <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono shrink-0">
+                <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground font-mono shrink-0">
                     <span>
                         {naturalSize.w} x {naturalSize.h}px
                     </span>

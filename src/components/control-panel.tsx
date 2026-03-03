@@ -144,11 +144,11 @@ function ColorInput({
     );
 }
 
-export function ControlPanel() {
+export function ControlPanelContent() {
     const store = useEditorStore();
 
     return (
-        <div className="w-72 shrink-0 border-l border-border bg-card overflow-y-auto h-full">
+        <>
             <div className="sticky top-0 z-10 bg-card border-b border-border px-4 py-3">
                 <h2 className="flex items-center gap-2 text-base font-semibold">
                     <SlidersHorizontalIcon className="size-4" />
@@ -466,6 +466,14 @@ export function ControlPanel() {
                     />
                 </Section>
             </div>
+        </>
+    );
+}
+
+export function ControlPanel() {
+    return (
+        <div className="hidden md:block w-72 shrink-0 border-l border-border bg-card overflow-y-auto h-full">
+            <ControlPanelContent />
         </div>
     );
 }
