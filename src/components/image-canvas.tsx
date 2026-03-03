@@ -83,8 +83,8 @@ export function ImageCanvas() {
 
             <div ref={zoomContainerRef} className="relative flex-1 w-full min-h-0">
                 <div className="w-full h-full overflow-auto">
-                    <div className="min-w-full min-h-full flex items-center justify-center p-4">
-                        <div style={{ zoom: zoom / 100 }}>
+                    <div className="min-w-full min-h-full flex p-4">
+                        <div className="m-auto" style={{ zoom: zoom / 100 }}>
                             <div
                                 ref={canvasRef}
                                 role="img"
