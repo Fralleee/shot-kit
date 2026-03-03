@@ -162,7 +162,7 @@ export const useEditorStore = create<EditorState>()(
             reset: () => set({ image: null, fileName: null, ...defaultSettings }),
         }),
         {
-            name: "shotkit-settings",
+            name: "shotkit-settings:v1",
             storage: createJSONStorage(() => ({
                 getItem: (name) => localStorage.getItem(name),
                 setItem: debouncedSetItem,

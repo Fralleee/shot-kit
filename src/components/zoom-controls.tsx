@@ -19,7 +19,7 @@ export function ZoomControls({ zoom, setZoom, zoomIn, zoomOut, resetZoom }: Zoom
         <div
             className={`absolute left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm border border-border rounded-lg shadow-sm ${isMobile ? "bottom-16" : "bottom-3"}`}
         >
-            <Button variant="ghost" size="icon-xs" onClick={zoomOut} title="Zoom out">
+            <Button variant="ghost" size="icon-xs" onClick={zoomOut} aria-label="Zoom out">
                 <MinusIcon />
             </Button>
             <Slider
@@ -30,7 +30,7 @@ export function ZoomControls({ zoom, setZoom, zoomIn, zoomOut, resetZoom }: Zoom
                 step={5}
                 className="w-24"
             />
-            <Button variant="ghost" size="icon-xs" onClick={zoomIn} title="Zoom in">
+            <Button variant="ghost" size="icon-xs" onClick={zoomIn} aria-label="Zoom in">
                 <PlusIcon />
             </Button>
             <input
@@ -43,11 +43,11 @@ export function ZoomControls({ zoom, setZoom, zoomIn, zoomOut, resetZoom }: Zoom
                 min={MIN_ZOOM}
                 max={MAX_ZOOM}
                 step={5}
-                className="w-14 text-xs text-muted-foreground font-mono tabular-nums text-right bg-transparent border border-border rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-14 input-number"
             />
             <span className="text-xs text-muted-foreground font-mono">%</span>
             {zoom !== 100 && (
-                <Button variant="ghost" size="icon-xs" onClick={resetZoom} title="Reset zoom">
+                <Button variant="ghost" size="icon-xs" onClick={resetZoom} aria-label="Reset zoom">
                     <RotateCcwIcon />
                 </Button>
             )}

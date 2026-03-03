@@ -12,6 +12,7 @@ import {
     SquareRoundCornerIcon,
     SunDimIcon,
 } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Label } from "@/components/ui/label";
@@ -39,7 +40,7 @@ function Section({
 }) {
     return (
         <Collapsible defaultOpen={defaultOpen} className="border-b border-border last:border-b-0">
-            <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight hover:text-foreground/80 transition-colors [&[data-state=open]>svg:last-child]:rotate-180">
+            <CollapsibleTrigger className="flex w-full items-center justify-between py-3 text-sm font-semibold tracking-tight rounded-sm hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&[data-state=open]>svg:last-child]:rotate-180">
                 <span className="flex items-center gap-2">
                     <Icon className="size-4 text-muted-foreground" />
                     {title}
@@ -81,7 +82,7 @@ function SliderControl({
                             variant="ghost"
                             size="icon-xs"
                             onClick={() => onChange(defaultValue)}
-                            title="Reset to default"
+                            aria-label="Reset to default"
                         >
                             <RotateCcwIcon />
                         </Button>
@@ -96,7 +97,7 @@ function SliderControl({
                         min={min}
                         max={max}
                         step={step}
-                        className="w-16 text-xs text-muted-foreground font-mono tabular-nums text-right bg-transparent border border-border rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-16 input-number"
                     />
                     {suffix && <span className="text-xs text-muted-foreground font-mono">{suffix}</span>}
                 </div>
@@ -145,7 +146,12 @@ function ColorInput({
 }
 
 export function ControlPanelContent() {
-    const store = useEditorStore();
+    const store = useEditorStore(
+        useShallow((s) => {
+            const { image, fileName, ...rest } = s;
+            return rest;
+        }),
+    );
 
     return (
         <>
@@ -214,7 +220,7 @@ export function ControlPanelContent() {
                                     variant="ghost"
                                     size="icon-xs"
                                     onClick={() => store.setShadowEnabled(defaultSettings.shadowEnabled)}
-                                    title="Reset to default"
+                                    aria-label="Reset to default"
                                 >
                                     <RotateCcwIcon />
                                 </Button>
@@ -343,7 +349,7 @@ export function ControlPanelContent() {
                                 variant="ghost"
                                 size="icon-xs"
                                 onClick={() => store.setBrowserFrame(defaultSettings.browserFrame)}
-                                title="Reset to default"
+                                aria-label="Reset to default"
                             >
                                 <RotateCcwIcon />
                             </Button>
@@ -381,7 +387,7 @@ export function ControlPanelContent() {
                                 variant="ghost"
                                 size="icon-xs"
                                 onClick={() => store.setBackgroundType(defaultSettings.backgroundType)}
-                                title="Reset to default"
+                                aria-label="Reset to default"
                             >
                                 <RotateCcwIcon />
                             </Button>

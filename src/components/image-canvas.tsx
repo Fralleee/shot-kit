@@ -1,5 +1,6 @@
 import { ClipboardCopyIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import { useCanvasZoom } from "@/hooks/use-canvas-zoom";
 import { useImageExport } from "@/hooks/use-image-export";
@@ -10,7 +11,12 @@ import { BrowserFrame } from "./browser-frame";
 import { ZoomControls } from "./zoom-controls";
 
 export function ImageCanvas() {
-    const store = useEditorStore();
+    const store = useEditorStore(
+        useShallow((s) => {
+            const { setBrowserFrameUrl, ...rest } = s;
+            return rest;
+        }),
+    );
     const isMobile = useIsMobile();
     const { canvasRef, copyToClipboard, download, copyLabel, downloadLabel } = useImageExport();
     const innerRef = useRef<HTMLDivElement>(null);
