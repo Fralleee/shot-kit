@@ -13,7 +13,7 @@ export function MobileSettingsDrawer() {
                 <Button
                     size="icon-lg"
                     variant="outline"
-                    className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg md:hidden"
+                    className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg md:hidden bg-background"
                     aria-label="Open settings"
                 >
                     <SlidersHorizontalIcon className="size-5" />
