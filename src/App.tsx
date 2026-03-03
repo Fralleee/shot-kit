@@ -1,11 +1,14 @@
 import { ControlPanel } from "@/components/control-panel";
 import { DropZone } from "@/components/drop-zone";
 import { ImageCanvas } from "@/components/image-canvas";
+import { MobileSettingsDrawer } from "@/components/mobile-settings-drawer";
 import { useImagePaste } from "@/hooks/use-image-paste";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useEditorStore } from "@/store/editor-store";
 
 function App() {
     const image = useEditorStore((s) => s.image);
+    const isMobile = useIsMobile();
 
     useImagePaste();
 
@@ -28,7 +31,7 @@ function App() {
             <div className="flex-1 overflow-auto flex items-center justify-center p-4">
                 <ImageCanvas />
             </div>
-            <ControlPanel />
+            {isMobile ? <MobileSettingsDrawer /> : <ControlPanel />}
         </div>
     );
 }
