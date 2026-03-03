@@ -15,7 +15,8 @@ export function ImageCanvas() {
     const { canvasRef, copyToClipboard, download, copyLabel, downloadLabel } = useImageExport();
     const innerRef = useRef<HTMLDivElement>(null);
     const zoomContainerRef = useRef<HTMLDivElement>(null);
-    const { zoom, setZoom, zoomIn, zoomOut, resetZoom } = useCanvasZoom(zoomContainerRef);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const { zoom, setZoom, zoomIn, zoomOut, resetZoom } = useCanvasZoom(zoomContainerRef, scrollRef);
     const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
     const [innerSize, setInnerSize] = useState<{ w: number; h: number } | null>(null);
 
@@ -82,7 +83,7 @@ export function ImageCanvas() {
             </p>
 
             <div ref={zoomContainerRef} className="relative flex-1 w-full min-h-0">
-                <div className="w-full h-full overflow-auto">
+                <div ref={scrollRef} className="w-full h-full overflow-auto bg-dot-grid">
                     <div className="min-w-full min-h-full flex p-4">
                         <div className="m-auto" style={{ zoom: zoom / 100 }}>
                             <div

@@ -21,14 +21,17 @@ afterEach(() => {
 describe("useCanvasZoom", () => {
     let container: HTMLDivElement;
     let target: HTMLDivElement;
+    let scrollEl: HTMLDivElement;
     let root: ReturnType<typeof createRoot>;
     let result: UseCanvasZoomReturn | undefined;
 
     beforeEach(() => {
         container = document.createElement("div");
         target = document.createElement("div");
+        scrollEl = document.createElement("div");
         document.body.appendChild(container);
         document.body.appendChild(target);
+        document.body.appendChild(scrollEl);
         root = createRoot(container);
         result = undefined;
     });
@@ -37,17 +40,25 @@ describe("useCanvasZoom", () => {
         root.unmount();
         container.remove();
         target.remove();
+        scrollEl.remove();
     });
 
-    function TestComponent({ elRef }: { elRef: React.RefObject<HTMLDivElement> }) {
-        result = useCanvasZoom(elRef);
+    function TestComponent({
+        elRef,
+        scrollRef,
+    }: {
+        elRef: React.RefObject<HTMLDivElement>;
+        scrollRef: React.RefObject<HTMLDivElement>;
+    }) {
+        result = useCanvasZoom(elRef, scrollRef);
         return null;
     }
 
     async function render() {
         const ref = { current: target };
+        const sRef = { current: scrollEl };
         await act(async () => {
-            root.render(createElement(TestComponent, { elRef: ref }));
+            root.render(createElement(TestComponent, { elRef: ref, scrollRef: sRef }));
         });
     }
 
