@@ -14,7 +14,7 @@ function App() {
 
     if (!image) {
         return (
-            <div className="relative flex items-center justify-center h-screen p-6 sm:p-8 overflow-hidden bg-background text-foreground">
+            <div className="relative flex items-center justify-center overflow-hidden h-screen p-6 sm:p-8 bg-background text-foreground">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,var(--color-brand-indigo)/0.12,transparent_70%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,var(--color-brand-indigo)/0.2,transparent_70%)]" />
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_100%,var(--color-brand-pink)/0.08,transparent_60%)] dark:bg-[radial-gradient(ellipse_60%_50%_at_80%_100%,var(--color-brand-pink)/0.13,transparent_60%)]" />
                 <div className="relative z-10 flex flex-col items-center w-full max-w-xl">

@@ -98,6 +98,12 @@ body {
     }
 }
 
+@layer components {
+    .input-number {
+        @apply text-xs text-muted-foreground font-mono tabular-nums text-right bg-transparent border border-border rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+    }
+}
+
 .bg-dot-grid {
     background-image: radial-gradient(circle, oklch(0.2 0 0 / 10%) 1px, transparent 1px);
     background-size: 20px 20px;

@@ -21,21 +21,44 @@ function UrlBar() {
     );
 }
 
+const trafficLights = (
+    <div className="flex gap-2">
+        <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+        <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+        <div className="w-3 h-3 rounded-full bg-[#28c940]" />
+    </div>
+);
+
+const windowsNavArrows = (
+    <div className="flex gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" />
+        </svg>
+    </div>
+);
+
+const windowsControls = (
+    <div className="flex gap-2 ml-3">
+        <div className="text-gray-400 text-xs">&#8212;</div>
+        <div className="text-gray-400 text-xs">&#9633;</div>
+        <div className="text-gray-400 text-xs">&times;</div>
+    </div>
+);
+
 function MacOSFrame({ children, borderRadius }: { children: ReactNode; borderRadius: number }) {
     return (
         <div className="flex flex-col overflow-hidden bg-[#e8e8e8]" style={{ borderRadius }}>
             <div className="flex items-center gap-2 px-4 py-3 bg-[#e0e0e0]">
-                <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-                    <div className="w-3 h-3 rounded-full bg-[#28c940]" />
-                </div>
+                {trafficLights}
                 <div className="flex-1 flex justify-center">
-                    <div className="bg-white/60 rounded-md px-12 py-1 min-w-[200px]">
+                    <div className="bg-white/60 rounded-md px-12 py-1 min-w-50">
                         <UrlBar />
                     </div>
                 </div>
-                <div className="w-[52px]" />
+                <div className="w-13" />
             </div>
             <div className="overflow-hidden">{children}</div>
         </div>
@@ -47,39 +70,12 @@ function WindowsFrame({ children, borderRadius }: { children: ReactNode; borderR
         <div className="flex flex-col overflow-hidden bg-[#f3f3f3]" style={{ borderRadius }}>
             <div className="flex items-center px-3 py-2 bg-[#f3f3f3]">
                 <div className="flex items-center gap-2 flex-1">
-                    <div className="flex gap-1.5">
-                        <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#666"
-                            strokeWidth="2"
-                            aria-hidden="true"
-                        >
-                            <path d="M15 18l-6-6 6-6" />
-                        </svg>
-                        <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#ccc"
-                            strokeWidth="2"
-                            aria-hidden="true"
-                        >
-                            <path d="M9 18l6-6-6-6" />
-                        </svg>
-                    </div>
+                    {windowsNavArrows}
                     <div className="bg-[#e8e8e8] rounded-full px-4 py-1 flex-1">
                         <UrlBar />
                     </div>
                 </div>
-                <div className="flex gap-2 ml-3">
-                    <div className="text-gray-400 text-xs">&#8212;</div>
-                    <div className="text-gray-400 text-xs">&#9633;</div>
-                    <div className="text-gray-400 text-xs">&times;</div>
-                </div>
+                {windowsControls}
             </div>
             <div className="overflow-hidden">{children}</div>
         </div>
