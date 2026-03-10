@@ -3,6 +3,21 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "description": "Free browser-based screenshot beautifier",
+    "author": "Fralle",
+    "license": "MIT",
+    "homepage": "https://shotkit.fralle.net",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Fralleee/shot-kit"
+    },
+    "keywords": [
+        "screenshot",
+        "beautifier",
+        "tool",
+        "react",
+        "vite"
+    ],
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
