@@ -11,7 +11,13 @@
         "type": "git",
         "url": "https://github.com/Fralleee/shot-kit"
     },
-    "keywords": ["screenshot", "beautifier", "tool", "react", "vite"],
+    "keywords": [
+        "screenshot",
+        "beautifier",
+        "tool",
+        "react",
+        "vite"
+    ],
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
