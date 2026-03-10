@@ -1,0 +1,16 @@
+{
+  "name": "ShotKit",
+  "short_name": "ShotKit",
+  "description": "Beautiful screenshots in seconds",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#161626",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
