@@ -27,6 +27,9 @@ describe("editor-store", () => {
             expect(state.scale).toBe(1);
             expect(state.backgroundType).toBe("gradient");
             expect(state.browserFrame).toBe("none");
+            expect(state.borderWidth).toBe(1);
+            expect(state.borderColor).toBe("#ffffff");
+            expect(state.borderOpacity).toBe(0.2);
         });
     });
 
@@ -120,6 +123,15 @@ describe("editor-store", () => {
             expect(useEditorStore.getState().gradientFrom).toBe("#aaa");
             expect(useEditorStore.getState().gradientTo).toBe("#bbb");
             expect(useEditorStore.getState().gradientAngle).toBe(90);
+        });
+
+        it("setBorderWidth / setBorderColor / setBorderOpacity", () => {
+            useEditorStore.getState().setBorderWidth(4);
+            useEditorStore.getState().setBorderColor("#ff0000");
+            useEditorStore.getState().setBorderOpacity(0.8);
+            expect(useEditorStore.getState().borderWidth).toBe(4);
+            expect(useEditorStore.getState().borderColor).toBe("#ff0000");
+            expect(useEditorStore.getState().borderOpacity).toBe(0.8);
         });
 
         it("setPadding / setScale", () => {
@@ -261,6 +273,26 @@ describe("editor-store", () => {
             const { image, fileName } = useEditorStore.getState();
             expect(image).toBe("data:image/png;base64,abc");
             expect(fileName).toBe("test.png");
+        });
+
+        it("sets borderWidth to 0 when border is disabled, valid width otherwise", () => {
+            for (let i = 0; i < 30; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { borderWidth } = useEditorStore.getState();
+                expect(borderWidth).toBeGreaterThanOrEqual(0);
+                expect(borderWidth).toBeLessThanOrEqual(3);
+            }
+        });
+
+        it("keeps borderOpacity within 0.1-0.4 when border is enabled", () => {
+            for (let i = 0; i < 30; i++) {
+                useEditorStore.getState().randomizeSettings();
+                const { borderWidth, borderOpacity } = useEditorStore.getState();
+                if (borderWidth > 0) {
+                    expect(borderOpacity).toBeGreaterThanOrEqual(0.1);
+                    expect(borderOpacity).toBeLessThanOrEqual(0.4);
+                }
+            }
         });
 
         it("keeps shadow blur within 10-60 when shadow is enabled", () => {

@@ -8,7 +8,7 @@ export function getBackground(s: EditorSettings): string {
 
 export function getBorder(s: EditorSettings): string {
     if (s.borderWidth === 0) return "none";
-    const alpha = Math.round(s.borderOpacity * 255)
+    const alpha = Math.round(Math.min(1, Math.max(0, s.borderOpacity)) * 255)
         .toString(16)
         .padStart(2, "0");
     return `${s.borderWidth}px solid ${s.borderColor}${alpha}`;
