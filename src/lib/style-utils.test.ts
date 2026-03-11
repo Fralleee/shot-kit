@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defaultSettings } from "@/store/editor-store";
-import { getBackground, getShadow, getTransform, getTransformOverflow } from "./style-utils";
+import { getBackground, getBorder, getShadow, getTransform, getTransformOverflow } from "./style-utils";
 
 describe("getBackground", () => {
     it("returns 'transparent' for transparent type", () => {
@@ -29,6 +29,63 @@ describe("getBackground", () => {
         expect(result).toBe(
             `linear-gradient(${defaultSettings.gradientAngle}deg, ${defaultSettings.gradientFrom}, ${defaultSettings.gradientTo})`,
         );
+    });
+});
+
+describe("getBorder", () => {
+    it("returns 'none' when borderWidth is 0", () => {
+        expect(getBorder({ ...defaultSettings, borderWidth: 0 })).toBe("none");
+    });
+
+    it("returns border string with correct format", () => {
+        const result = getBorder({
+            ...defaultSettings,
+            borderWidth: 2,
+            borderColor: "#ffffff",
+            borderOpacity: 1,
+        });
+        expect(result).toBe("2px solid #ffffffff");
+    });
+
+    it("converts opacity to hex correctly", () => {
+        const result = getBorder({
+            ...defaultSettings,
+            borderWidth: 1,
+            borderColor: "#ffffff",
+            borderOpacity: 0.5,
+        });
+        // 0.5 * 255 = 127.5, rounded = 128 = 0x80
+        expect(result).toBe("1px solid #ffffff80");
+    });
+
+    it("handles zero opacity", () => {
+        const result = getBorder({
+            ...defaultSettings,
+            borderWidth: 1,
+            borderColor: "#ffffff",
+            borderOpacity: 0,
+        });
+        expect(result).toBe("1px solid #ffffff00");
+    });
+
+    it("clamps opacity above 1", () => {
+        const result = getBorder({
+            ...defaultSettings,
+            borderWidth: 1,
+            borderColor: "#000000",
+            borderOpacity: 1.5,
+        });
+        expect(result).toBe("1px solid #000000ff");
+    });
+
+    it("clamps negative opacity to 0", () => {
+        const result = getBorder({
+            ...defaultSettings,
+            borderWidth: 1,
+            borderColor: "#000000",
+            borderOpacity: -0.5,
+        });
+        expect(result).toBe("1px solid #00000000");
     });
 });
 

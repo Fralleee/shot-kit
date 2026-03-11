@@ -6,6 +6,14 @@ export function getBackground(s: EditorSettings): string {
     return `linear-gradient(${s.gradientAngle}deg, ${s.gradientFrom}, ${s.gradientTo})`;
 }
 
+export function getBorder(s: EditorSettings): string {
+    if (s.borderWidth === 0) return "none";
+    const alpha = Math.round(Math.min(1, Math.max(0, s.borderOpacity)) * 255)
+        .toString(16)
+        .padStart(2, "0");
+    return `${s.borderWidth}px solid ${s.borderColor}${alpha}`;
+}
+
 export function getShadow(s: EditorSettings): string {
     if (!s.shadowEnabled) return "none";
     const alpha = Math.round(s.shadowOpacity * 255)

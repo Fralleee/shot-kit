@@ -187,7 +187,11 @@ export function ControlPanelContent() {
                     </Button>
                 </Section>
 
-                <Section title="Corners" icon={SquareRoundCornerIcon} defaultOpen={hasChanges(store, ["borderRadius"])}>
+                <Section
+                    title="Corners & Border"
+                    icon={SquareRoundCornerIcon}
+                    defaultOpen={hasChanges(store, ["borderRadius", "borderWidth", "borderColor", "borderOpacity"])}
+                >
                     <SliderControl
                         label="Border Radius"
                         value={store.borderRadius}
@@ -197,6 +201,34 @@ export function ControlPanelContent() {
                         suffix="px"
                         defaultValue={defaultSettings.borderRadius}
                     />
+                    <SliderControl
+                        label="Border Width"
+                        value={store.borderWidth}
+                        onChange={store.setBorderWidth}
+                        min={0}
+                        max={32}
+                        suffix="px"
+                        defaultValue={defaultSettings.borderWidth}
+                    />
+                    {store.borderWidth > 0 && (
+                        <div className="space-y-3">
+                            <SliderControl
+                                label="Border Opacity"
+                                value={store.borderOpacity}
+                                onChange={store.setBorderOpacity}
+                                min={0}
+                                max={1}
+                                step={0.05}
+                                defaultValue={defaultSettings.borderOpacity}
+                            />
+                            <ColorInput
+                                label="Border Color"
+                                value={store.borderColor}
+                                onChange={store.setBorderColor}
+                                defaultValue={defaultSettings.borderColor}
+                            />
+                        </div>
+                    )}
                 </Section>
 
                 <Section
