@@ -6,6 +6,9 @@ export type BackgroundType = "solid" | "gradient" | "transparent";
 
 export interface EditorSettings {
     borderRadius: number;
+    borderWidth: number;
+    borderColor: string;
+    borderOpacity: number;
     shadowEnabled: boolean;
     shadowBlur: number;
     shadowSpread: number;
@@ -34,6 +37,9 @@ interface EditorState extends EditorSettings {
 
     setImage: (image: string | null, fileName?: string | null) => void;
     setBorderRadius: (radius: number) => void;
+    setBorderWidth: (width: number) => void;
+    setBorderColor: (color: string) => void;
+    setBorderOpacity: (opacity: number) => void;
     setShadowEnabled: (enabled: boolean) => void;
     setShadowBlur: (blur: number) => void;
     setShadowSpread: (spread: number) => void;
@@ -62,6 +68,9 @@ interface EditorState extends EditorSettings {
 
 export const defaultSettings: EditorSettings = {
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    borderOpacity: 0.2,
     shadowEnabled: true,
     shadowBlur: 40,
     shadowSpread: 0,
@@ -101,6 +110,9 @@ export const useEditorStore = create<EditorState>()(
 
             setImage: (image, fileName = null) => set({ image, fileName }),
             setBorderRadius: (borderRadius) => set({ borderRadius }),
+            setBorderWidth: (borderWidth) => set({ borderWidth }),
+            setBorderColor: (borderColor) => set({ borderColor }),
+            setBorderOpacity: (borderOpacity) => set({ borderOpacity }),
             setShadowEnabled: (shadowEnabled) => set({ shadowEnabled }),
             setShadowBlur: (shadowBlur) => set({ shadowBlur }),
             setShadowSpread: (shadowSpread) => set({ shadowSpread }),
@@ -134,10 +146,14 @@ export const useEditorStore = create<EditorState>()(
                 const useTilt = Math.random() < 0.7;
                 const useRotate = Math.random() < 0.15;
                 const useShadow = Math.random() < 0.8;
+                const useBorder = Math.random() < 0.3;
                 const bgType = pick<BackgroundType>(["gradient", "gradient", "solid"]);
 
                 set({
                     borderRadius: randInt(0, 24),
+                    borderWidth: useBorder ? pick([1, 1, 2, 2, 3]) : 0,
+                    borderColor: useBorder ? pick(["#ffffff", "#ffffff", "#000000"]) : defaultSettings.borderColor,
+                    borderOpacity: useBorder ? Math.round(rand(0.1, 0.4) * 100) / 100 : defaultSettings.borderOpacity,
                     shadowEnabled: useShadow,
                     shadowBlur: useShadow ? randInt(10, 60) : defaultSettings.shadowBlur,
                     shadowSpread: useShadow ? randInt(-5, 10) : defaultSettings.shadowSpread,

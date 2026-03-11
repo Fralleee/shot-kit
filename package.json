@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.2.1",
+        "@tanstack/react-hotkeys": "^0.4.1",
         "clsx": "^2.1.1",
         "html-to-image": "^1.11.13",
         "lucide-react": "^0.576.0",

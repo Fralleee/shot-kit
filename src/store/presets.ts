@@ -21,6 +21,7 @@ export const presets: Preset[] = [
             ...defaultSettings,
             browserFrame: "macos",
             borderRadius: 12,
+            borderWidth: 0,
             shadowBlur: 24,
             rotateX: 4,
             rotateY: -4,
@@ -43,6 +44,9 @@ export const presets: Preset[] = [
             shadowOpacity: 0.15,
             padding: 32,
             borderRadius: 8,
+            borderWidth: 1,
+            borderColor: "#000000",
+            borderOpacity: 0.1,
         },
     },
 ];

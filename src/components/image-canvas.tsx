@@ -2,10 +2,11 @@ import { ClipboardCopyIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
+import { useAppHotkeys } from "@/hooks/use-app-hotkeys";
 import { useCanvasZoom } from "@/hooks/use-canvas-zoom";
 import { useImageExport } from "@/hooks/use-image-export";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getBackground, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
+import { getBackground, getBorder, getShadow, getTransform, getTransformOverflow } from "@/lib/style-utils";
 import { useEditorStore } from "@/store/editor-store";
 import { BrowserFrame } from "./browser-frame";
 import { ZoomControls } from "./zoom-controls";
@@ -23,6 +24,11 @@ export function ImageCanvas() {
     const zoomContainerRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const { zoom, setZoom, zoomIn, zoomOut, resetZoom } = useCanvasZoom(zoomContainerRef, scrollRef);
+    useAppHotkeys({
+        copy: copyToClipboard,
+        download,
+        clear: store.reset,
+    });
     const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
     const [innerSize, setInnerSize] = useState<{ w: number; h: number } | null>(null);
 
@@ -111,13 +117,18 @@ export function ImageCanvas() {
                                     style={{
                                         transform: getTransform(store),
                                         boxShadow: getShadow(store),
+                                        border: getBorder(store),
                                         borderRadius: store.borderRadius,
                                         overflow: "hidden",
                                     }}
                                 >
                                     <BrowserFrame
                                         style={store.browserFrame}
-                                        borderRadius={store.browserFrame !== "none" ? store.borderRadius : 0}
+                                        borderRadius={
+                                            store.browserFrame !== "none"
+                                                ? Math.max(0, store.borderRadius - store.borderWidth)
+                                                : 0
+                                        }
                                     >
                                         <img
                                             src={store.image as string}
@@ -127,7 +138,12 @@ export function ImageCanvas() {
                                                 maxWidth: `calc(100vw - ${isMobile ? 0 : 288}px - ${isMobile ? "2rem" : "6rem"} - ${store.padding * 2}px)`,
                                                 maxHeight: `calc(100vh - 12rem - ${store.padding * 2}px)`,
                                                 ...(store.browserFrame === "none"
-                                                    ? { borderRadius: store.borderRadius }
+                                                    ? {
+                                                          borderRadius: Math.max(
+                                                              0,
+                                                              store.borderRadius - store.borderWidth,
+                                                          ),
+                                                      }
                                                     : {}),
                                             }}
                                             draggable={false}
