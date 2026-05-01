@@ -13,8 +13,8 @@ function UrlBar() {
     const setUrl = useEditorStore((s) => s.setBrowserFrameUrl);
     return (
         <div className="relative">
-            <span aria-hidden="true" className="block invisible whitespace-pre text-xs">
-                {url || " "}
+            <span aria-hidden="true" className="inline-block invisible whitespace-pre text-xs">
+                {url || "\u00A0"}
             </span>
             <input
                 type="text"
