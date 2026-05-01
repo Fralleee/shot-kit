@@ -12,12 +12,17 @@ function UrlBar() {
     const url = useEditorStore((s) => s.browserFrameUrl);
     const setUrl = useEditorStore((s) => s.setBrowserFrameUrl);
     return (
-        <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="bg-transparent text-xs text-gray-500 text-center w-full outline-none"
-        />
+        <div className="relative">
+            <span aria-hidden="true" className="block invisible whitespace-pre text-xs">
+                {url || " "}
+            </span>
+            <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="absolute inset-0 bg-transparent text-xs text-gray-500 text-center w-full outline-none"
+            />
+        </div>
     );
 }
 
@@ -53,8 +58,8 @@ function MacOSFrame({ children, borderRadius }: { children: ReactNode; borderRad
         <div className="flex flex-col overflow-hidden bg-[#e8e8e8]" style={{ borderRadius }}>
             <div className="flex items-center gap-2 px-4 py-3 bg-[#e0e0e0]">
                 {trafficLights}
-                <div className="flex-1 flex justify-center">
-                    <div className="bg-white/60 rounded-md px-12 py-1 min-w-50">
+                <div className="flex-1 flex justify-center min-w-0">
+                    <div className="bg-white/60 rounded-md px-12 py-1 flex-1 min-w-50">
                         <UrlBar />
                     </div>
                 </div>
@@ -71,7 +76,7 @@ function WindowsFrame({ children, borderRadius }: { children: ReactNode; borderR
             <div className="flex items-center px-3 py-2 bg-[#f3f3f3]">
                 <div className="flex items-center gap-2 flex-1">
                     {windowsNavArrows}
-                    <div className="bg-[#e8e8e8] rounded-full px-4 py-1 flex-1">
+                    <div className="bg-[#e8e8e8] rounded-full px-4 py-1 flex-1 min-w-50">
                         <UrlBar />
                     </div>
                 </div>

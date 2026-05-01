@@ -133,7 +133,7 @@ export function ImageCanvas() {
                                         <img
                                             src={store.image as string}
                                             alt="Screenshot"
-                                            className="block h-auto"
+                                            className={`block h-auto${store.browserFrame !== "none" ? " w-full" : ""}`}
                                             style={{
                                                 maxWidth: `calc(100vw - ${isMobile ? 0 : 288}px - ${isMobile ? "2rem" : "6rem"} - ${store.padding * 2}px)`,
                                                 maxHeight: `calc(100vh - 12rem - ${store.padding * 2}px)`,
