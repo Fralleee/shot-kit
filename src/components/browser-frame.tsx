@@ -18,6 +18,7 @@ function UrlBar() {
             </span>
             <input
                 type="text"
+                aria-label="Browser frame URL"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 className="absolute inset-0 bg-transparent text-xs text-gray-500 text-center w-full outline-none"
